@@ -1,11 +1,12 @@
 import { ThrottlerModuleOptions } from '@nestjs/throttler';
+import { ConfigService } from '@nestjs/config';
 
-export const getThrottlerConfig = (): ThrottlerModuleOptions => ({
+export const getThrottlerConfig = (configService: ConfigService): ThrottlerModuleOptions => ({
   throttlers: [
     {
       name: 'default',
-      ttl: 60000, // 60 seconds
-      limit: 30,  // 30 requests per minute
+      ttl: parseInt(configService.getOrThrow('THROTTLE_TTL'), 10), // milliseconds
+      limit: parseInt(configService.getOrThrow('THROTTLE_LIMIT'), 10), // requests per ttl
     }
   ]
 });
